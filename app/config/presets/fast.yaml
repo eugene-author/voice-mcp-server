@@ -1,0 +1,9 @@
+description: Small model, segment timestamps, no denoising.
+stt:
+  model: small
+  beam_size: 1
+  word_timestamps: false
+  denoise: false
+  segment_flags: false
+tts:
+  loudness_normalization: false

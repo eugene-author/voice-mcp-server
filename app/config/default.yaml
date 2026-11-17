@@ -1,0 +1,155 @@
+server:
+  name: local-voice-mcp
+  transport: streamable_http      # streamable_http | stdio (control transport, NOT audio streaming)
+  host: 127.0.0.1                 # Docker image sets 0.0.0.0; compose publishes to 127.0.0.1
+  port: 8000
+  allowed_input_directories: []   # empty -> ${data_root}/inputs
+  allowed_hosts: []               # Host headers accepted over HTTP; empty -> loopback only; required off loopback
+  allowed_origins: []             # Origin headers accepted; empty -> loopback origins; no Origin header always passes
+
+auth:
+  mode: oauth                     # oauth (required for streamable_http) | trusted_local (stdio only)
+  issuer_url: null                # e.g. http://127.0.0.1:8080/realms/voice
+  audience: null                  # must equal resource_server_url, e.g. http://127.0.0.1:8000/mcp
+  resource_server_url: null
+  validate_token_resource: true   # SDK resource binding; must stay true
+  jwks_url: null                  # null -> discovered from issuer metadata; set when the issuer URL is not reachable from here (Compose)
+  algorithms: [RS256, ES256]      # none and HS* are rejected
+  required_scopes: [mcp:access]
+  leeway_seconds: 30
+  jwks_cache_seconds: 3600        # TTL of verified keys and PyJWKClient key-set cache
+  jwks_min_refresh_seconds: 30    # minimum interval between key-set fetches
+  jwks_fetch_timeout_seconds: 10
+  warm_jwks_on_startup: true
+  startup_timeout_seconds: 60     # keep retrying discovery and the first key fetch this long, then fail startup
+
+hardware:
+  exclusive_residency_ram_mb: 16384   # at or below this RAM (or on GPUs below 8 GB) only one model stays loaded
+
+stt:
+  backend: auto                   # auto | ctranslate2 | mlx ; env WHISPER_BACKEND
+  model: small
+  device: auto                    # ctranslate2 only: auto | cuda | cpu
+  compute_type: auto              # ctranslate2 only
+  low_vram_threshold_mb: 4000     # below -> int8_float16
+  language: auto
+  beam_size: 5                    # mlx: substituted with greedy when from preset/default
+  temperature: 0.0
+  word_timestamps: true
+  segment_flags: true
+  glossary: []
+  vad:
+    enabled: true
+    threshold: 0.5
+    min_speech_duration_ms: 250
+    min_silence_duration_ms: 500
+    speech_pad_ms: 250
+    merge_gap_ms: 300             # mlx standalone path only
+
+tts:
+  backend: auto                   # auto | torch | mlx ; env TTS_BACKEND
+  engine: qwen3_tts               # model family (single)
+  cloning_checkpoint: Qwen3-TTS-12Hz-0.6B-Base
+  preset_checkpoint: Qwen3-TTS-12Hz-0.6B-CustomVoice
+  output_format: wav
+  allow_cpu: true                 # torch runtime on CPU; reported as slow
+  conditioning_cache_size: 8      # in-memory voice conditioning entries
+  max_characters: 20000
+  max_chunk_chars: 300
+  gap_ms: 120
+
+audio:
+  accepted_formats: [mp3, wav, m4a, ogg, flac, opus, webm]
+  max_input_bytes: 2147483648
+  max_duration_seconds: 14400
+  denoising:
+    engine: deepfilternet
+    model: deepfilternet3
+    enabled: false                # opt-in; DeepFilterNet3 ONNX on onnxruntime (CPU; CUDA if onnxruntime-gpu)
+    attenuation_limit_db: 0       # 0 = full suppression; e.g. 12 keeps some background for natural sound
+  loudness_normalization: true
+  filler_removal: annotate_only
+  repeated_starts: annotate_only
+  fillers:
+    en: [um, uh, erm, hmm, uhm, mhm]
+    es: [eh, este, pues, mmm, o sea]
+  max_batch_upload_bytes: 10737418240   # input_transfer=ingest: a transcribe_batch over this total fails
+
+jobs:
+  max_attempts: 2
+  retry_backoff_seconds: [3, 10]
+  startup_recovery: true
+  poll_interval_seconds: 5
+  heartbeat_seconds: 15
+  lease_timeout_seconds: 120
+  inline_wait_seconds: 120
+  batch_max_items: 500
+  text_preview_chars: 2000
+  list_jobs_default_limit: 20
+  list_jobs_max_limit: 100
+  queue_size: 1000
+
+storage:
+  backend: local                  # local | s3 ; env STORAGE_BACKEND
+  data_root: ./var                # env DATA_ROOT; Docker: /srv/voice-mcp
+  preserve_inputs: true
+  input_transfer: shared_path     # shared_path (workers read the submitted path) | ingest (copy inputs to the asset store)
+  orphan_retention_hours: 24      # unreferenced assets older than this are removed by reconciliation
+  workspace_root: null              # null -> ${data_root}/workspace ; env WORKSPACE_ROOT
+  local:
+    assets_root: null             # null -> ${data_root}/assets ; env ASSETS_ROOT
+  s3:
+    bucket: null                  # required if backend=s3
+    region: null                  # required if backend=s3
+    prefix: voice-mcp
+    presign_downloads: false
+    presign_ttl_seconds: 300
+    encryption: sse-s3            # sse-s3 | sse-kms
+    kms_key_id: null
+    max_concurrency: 4
+    # credentials: boto3 default provider chain only
+
+database:
+  # url from env DATABASE_URL (SecretStr); keep it out of YAML
+  pool_size: 5
+  max_overflow: 5
+  connect_timeout_seconds: 10
+  statement_timeout_ms: 30000
+
+models:
+  root: null                      # null -> ${data_root}/models ; env MODELS_ROOT
+  allow_runtime_downloads: false  # must stay false; install via CLI
+
+observability:
+  log_format: json                # json | console
+  log_level: INFO
+  save_job_events: true
+
+deployment:
+  role: all                       # all | api | worker ; env SERVICE_ROLE ; all = MCP server and inference in one process
+
+gpu_worker:
+  idle_unload_seconds: 0          # unload idle models inside a running worker (and the all role); 0 = never
+  drain_timeout_seconds: 1800     # a draining worker finishes its job within this, else the job is released
+  on_demand:
+    enabled: false                # MASTER SWITCH (env GPU_ON_DEMAND); false = no controller at all; needs role api
+    target: none                  # none | docker | aws_ecs ; required to be non-none when enabled
+    dry_run: false                # true = decide and log, without starting or stopping anything
+    tick_seconds: 15
+    idle_timeout_seconds: 300     # no work for this long -> request draining
+    min_uptime_seconds: 300       # never drain sooner than this after a start
+    start_timeout_seconds: 900    # started but not ready in time (or heartbeat lost this long) -> force stop
+    drain_confirm_margin_seconds: 60
+    start_backoff_seconds: [30, 60, 120, 300]
+    schedule:
+      timezone: UTC               # IANA name, e.g. Europe/Amsterdam
+      windows: []                 # e.g. [{days: [mon, tue, wed, thu, fri], start: "08:00", end: "10:00",
+                                  #        lead_minutes: 10, preload: ["stt:large-v3"]}]
+    docker:
+      endpoint: unix:///var/run/docker-proxy.sock   # or http://docker-proxy:2375 ; not the raw Docker socket
+      container: voice-mcp-gpu-worker
+      request_timeout_seconds: 10
+    aws_ecs:
+      region: null
+      cluster: null
+      service: null

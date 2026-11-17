@@ -1,0 +1,1 @@
+"""stt adapter package."""

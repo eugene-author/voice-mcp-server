@@ -1,0 +1,140 @@
+name: ci
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  schedule:
+    - cron: "17 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  quality-tests:
+    runs-on: ubuntu-24.04
+    services:
+      postgres:
+        image: postgres:16.6
+        env:
+          POSTGRES_USER: voice
+          POSTGRES_PASSWORD: voice
+          POSTGRES_DB: voice_test
+        ports: ["5433:5432"]
+        options: >-
+          --health-cmd "pg_isready -U voice -d voice_test"
+          --health-interval 5s --health-timeout 3s --health-retries 20
+    env:
+      TEST_DATABASE_URL: postgresql://voice:voice@127.0.0.1:5433/voice_test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.8.22"
+          python-version: "3.14"
+          enable-cache: true
+      - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends ffmpeg
+      - run: uv sync --frozen --extra tts --extra denoise --extra s3 --extra cpu
+      - name: Format
+        run: uv run black --check app tests
+      - name: Lint
+        run: uv run ruff check app tests
+      - name: Types
+        run: uv run mypy
+      - name: Import boundaries
+        run: uv run lint-imports
+      - name: Unit, contract and adapter tests (mocks)
+        run: uv run pytest
+      - name: Integration tests (PostgreSQL, FFmpeg)
+        run: uv run pytest -m "integration or s3"
+
+  models-linux:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch))
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    env:
+      DATA_ROOT: ${{ github.workspace }}/var
+      VOICE_MCP_SERVER__TRANSPORT: stdio
+      VOICE_MCP_STT__MODEL: tiny
+      VOICE_MCP_OBSERVABILITY__LOG_FORMAT: console
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.8.22"
+          python-version: "3.14"
+          enable-cache: true
+      - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends ffmpeg
+      - run: uv sync --frozen --extra tts --extra denoise --extra cpu
+      - uses: actions/cache@v4
+        with:
+          path: var/models
+          key: models-linux-cpu-${{ hashFiles('app/config/models.yaml') }}
+      - name: Install models
+        run: |
+          test -f var/models/stt/ctranslate2/tiny/manifest.json || uv run python -m app models install --stt tiny --backend ctranslate2
+          test -f var/models/tts/torch/Qwen3-TTS-12Hz-0.6B-Base/manifest.json || uv run python -m app models install --tts Qwen3-TTS-12Hz-0.6B-Base --backend torch
+          test -f var/models/tts/torch/Qwen3-TTS-12Hz-0.6B-CustomVoice/manifest.json || uv run python -m app models install --tts Qwen3-TTS-12Hz-0.6B-CustomVoice --backend torch
+          test -f var/models/denoise/deepfilternet/deepfilternet3/manifest.json || uv run python -m app models install --denoise deepfilternet3
+      - name: Diagnose
+        env:
+          HF_HUB_OFFLINE: "1"
+        run: uv run python -m app diagnose | tee diagnose.json
+      - name: Real-model tests (faster-whisper, Qwen3-TTS torch, DeepFilterNet3 ONNX)
+        env:
+          HF_HUB_OFFLINE: "1"
+        run: uv run pytest -m models -v
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: linux-diagnose-and-samples
+          path: |
+            diagnose.json
+            var/ci-samples/
+          if-no-files-found: warn
+
+  models-macos:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+    runs-on: macos-15
+    timeout-minutes: 90
+    env:
+      DATA_ROOT: ${{ github.workspace }}/var
+      VOICE_MCP_SERVER__TRANSPORT: stdio
+      VOICE_MCP_OBSERVABILITY__LOG_FORMAT: console
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.8.22"
+          python-version: "3.14"
+          enable-cache: true
+      - run: brew install ffmpeg
+      - name: Resolve the universal lock on macOS
+        run: uv sync --frozen --extra mlx --extra denoise
+      - name: Import checks
+        run: uv run python -c "import mlx_whisper, mlx_audio, silero_vad, onnxruntime; print('imports ok')"
+      - uses: actions/cache@v4
+        with:
+          path: var/models
+          key: models-macos-${{ hashFiles('app/config/models.yaml') }}
+      - name: Install models
+        run: |
+          test -f var/models/stt/mlx/tiny/manifest.json || uv run python -m app models install --stt tiny --backend mlx
+          test -f var/models/tts/mlx/Qwen3-TTS-12Hz-0.6B-Base/manifest.json || uv run python -m app models install --tts Qwen3-TTS-12Hz-0.6B-Base --backend mlx
+          test -f var/models/tts/mlx/Qwen3-TTS-12Hz-0.6B-CustomVoice/manifest.json || uv run python -m app models install --tts Qwen3-TTS-12Hz-0.6B-CustomVoice --backend mlx
+          test -f var/models/denoise/deepfilternet/deepfilternet3/manifest.json || uv run python -m app models install --denoise deepfilternet3
+      - name: Diagnose
+        run: uv run python -m app diagnose --skip-inference | tee diagnose.json
+      - name: MLX tests (models loaded offline)
+        env:
+          HF_HUB_OFFLINE: "1"
+        run: uv run pytest -m "mlx or models" -v
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: macos-diagnose-and-samples
+          path: |
+            diagnose.json
+            var/ci-samples/
+          if-no-files-found: ignore

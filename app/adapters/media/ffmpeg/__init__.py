@@ -1,0 +1,1 @@
+"""media ffmpeg adapter package."""

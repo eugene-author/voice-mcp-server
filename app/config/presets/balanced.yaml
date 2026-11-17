@@ -1,0 +1,8 @@
+description: Medium model when installed, word timestamps and segment quality flags.
+stt:
+  model: medium
+  beam_size: 5
+  word_timestamps: true
+  segment_flags: true
+tts:
+  loudness_normalization: true

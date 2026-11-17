@@ -1,0 +1,201 @@
+# Local or single-host deployment. Bind mounts use identical host and container paths so
+# file paths returned by get_job are valid on both sides.
+name: voice-mcp
+
+x-app: &app
+  image: voice-mcp:${VARIANT:-cpu}
+  build:
+    context: ..
+    dockerfile: deploy/docker/Dockerfile
+    args:
+      VARIANT: ${VARIANT:-cpu}
+  env_file: ../.env
+  environment: &app-env
+    DATABASE_URL: postgresql://voice:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}@postgres:5432/voice
+    DATA_ROOT: /srv/voice-mcp
+    ASSETS_ROOT: ${ASSETS_DIR:-/srv/voice-mcp/assets}
+    VOICE_MCP_SERVER__ALLOWED_INPUT_DIRECTORIES: '["${INPUTS_DIR:-/srv/voice-mcp/inputs}"]'
+    # Tokens keep the public issuer (VOICE_MCP_AUTH__ISSUER_URL, e.g. http://127.0.0.1:8080/realms/voice), but
+    # 127.0.0.1 inside this container is the container itself, so the signing keys are fetched through the Compose
+    # network. Leave CONTAINER_JWKS_URL empty for an external provider whose issuer URL is reachable from here.
+    VOICE_MCP_AUTH__JWKS_URL: ${CONTAINER_JWKS_URL:-}
+    # The app listens on 0.0.0.0 inside the container, so Host/Origin validation (DNS-rebinding protection) needs
+    # the Host headers clients send to the published port below; add a proxy's public hostname when behind one.
+    VOICE_MCP_SERVER__ALLOWED_HOSTS: '${MCP_ALLOWED_HOSTS:-["127.0.0.1:8000","localhost:8000"]}'
+    VOICE_MCP_SERVER__ALLOWED_ORIGINS: '${MCP_ALLOWED_ORIGINS:-[]}'
+  volumes:
+    - models:/srv/voice-mcp/models
+    - ${ASSETS_DIR:-/srv/voice-mcp/assets}:${ASSETS_DIR:-/srv/voice-mcp/assets}
+    - ${INPUTS_DIR:-/srv/voice-mcp/inputs}:${INPUTS_DIR:-/srv/voice-mcp/inputs}:ro
+    - workspace:/srv/voice-mcp/workspace
+    - logs:/srv/voice-mcp/logs
+  read_only: true
+  tmpfs:
+    - /tmp
+  security_opt:
+    - no-new-privileges:true
+  cap_drop:
+    - ALL
+
+services:
+  postgres:
+    image: postgres:16.6
+    environment:
+      POSTGRES_USER: voice
+      POSTGRES_DB: voice
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U voice -d voice"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  migrate:
+    <<: *app
+    command: ["migrate"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+
+  app:
+    <<: *app
+    command: ["serve", "--transport", "streamable_http"]
+    volumes:
+      - models:/srv/voice-mcp/models:ro
+      - ${ASSETS_DIR:-/srv/voice-mcp/assets}:${ASSETS_DIR:-/srv/voice-mcp/assets}
+      - ${INPUTS_DIR:-/srv/voice-mcp/inputs}:${INPUTS_DIR:-/srv/voice-mcp/inputs}:ro
+      - workspace:/srv/voice-mcp/workspace
+      - logs:/srv/voice-mcp/logs
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      keycloak:
+        condition: service_healthy
+        required: false   # only waited for when the auth profile runs the reference Keycloak
+    ports:
+      - "127.0.0.1:8000:8000"
+    restart: unless-stopped
+
+  # --- split profile: MCP server without models (api) and a separate GPU worker -------------------------
+  # Run instead of `app`, not alongside it: `docker compose --profile split up -d api gpu-worker`.
+  # For on-demand start (docker target, see docs/gpu-worker.md) create the worker once and start only the api:
+  #   docker compose --profile split create gpu-worker && docker compose --profile split up -d api docker-proxy
+  api:
+    <<: *app
+    profiles: ["split"]
+    command: ["serve", "--role", "api", "--transport", "streamable_http"]
+    environment:
+      <<: *app-env
+      SERVICE_ROLE: api
+      GPU_ON_DEMAND: ${GPU_ON_DEMAND:-false}                    # true: start the worker on demand, drain when idle
+      VOICE_MCP_GPU_WORKER__ON_DEMAND__TARGET: docker
+      VOICE_MCP_GPU_WORKER__ON_DEMAND__DOCKER__ENDPOINT: http://docker-proxy:2375
+    volumes:   # no models: the api validates requests from the worker's published capability snapshot
+      - ${ASSETS_DIR:-/srv/voice-mcp/assets}:${ASSETS_DIR:-/srv/voice-mcp/assets}
+      - ${INPUTS_DIR:-/srv/voice-mcp/inputs}:${INPUTS_DIR:-/srv/voice-mcp/inputs}:ro
+      - workspace-api:/srv/voice-mcp/workspace
+      - logs:/srv/voice-mcp/logs
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      keycloak:
+        condition: service_healthy
+        required: false
+    ports:
+      - "127.0.0.1:8000:8000"
+    networks: [default, docker-control]
+    restart: unless-stopped
+
+  docker-proxy:
+    # Do not mount the raw Docker socket into the api: this proxy allows only inspect, start and stop of the
+    # worker container, only from the api, on an internal network with no route to anything else.
+    image: wollomatic/socket-proxy:1.10.0
+    profiles: ["split"]
+    command:
+      - -listenip=0.0.0.0
+      - -allowfrom=api
+      - -allowGET=(/v[0-9.]+)?/containers/voice-mcp-gpu-worker/json
+      - -allowPOST=(/v[0-9.]+)?/containers/voice-mcp-gpu-worker/(start|stop)
+      - -loglevel=info
+    user: "65534:${DOCKER_GID:-999}"   # nobody, in the host's docker group (getent group docker)
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks: [docker-control]
+    read_only: true
+    mem_limit: 64M
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    restart: unless-stopped
+
+  gpu-worker:
+    <<: *app
+    profiles: ["split"]
+    container_name: voice-mcp-gpu-worker   # the docker compute target starts and stops this name
+    command: ["worker"]
+    environment:
+      <<: *app-env
+      SERVICE_ROLE: worker
+      GPU_ON_DEMAND: "false"               # the controller runs in the api; the worker only drains when asked
+    volumes:
+      - models:/srv/voice-mcp/models:ro
+      - ${ASSETS_DIR:-/srv/voice-mcp/assets}:${ASSETS_DIR:-/srv/voice-mcp/assets}
+      - ${INPUTS_DIR:-/srv/voice-mcp/inputs}:${INPUTS_DIR:-/srv/voice-mcp/inputs}:ro
+      - workspace:/srv/voice-mcp/workspace
+      - logs:/srv/voice-mcp/logs
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      disable: true                        # no listening port; health is the registry heartbeat
+    stop_grace_period: 30m                 # >= gpu_worker.drain_timeout_seconds, so SIGTERM drains the current job
+    restart: "no"                          # started and stopped by the wake controller or an operator
+
+  admin:
+    <<: *app
+    profiles: ["tools"]
+    entrypoint: ["tini", "--", "entrypoint.sh"]
+    command: ["diagnose"]
+    restart: "no"
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.4.2
+    profiles: ["auth"]
+    command: ["start-dev", "--import-realm", "--http-port=8080"]
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN:-admin}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:?set KEYCLOAK_ADMIN_PASSWORD in .env}
+      KC_HOSTNAME: http://127.0.0.1:8080   # the public issuer: tokens carry iss=http://127.0.0.1:8080/realms/voice
+      KC_HEALTH_ENABLED: "true"
+    volumes:
+      - ./keycloak/realm-voice.json:/opt/keycloak/data/import/realm-voice.json:ro
+    ports:
+      - "127.0.0.1:8080:8080"
+    healthcheck:
+      # Ready only once the voice realm is imported and serves its keys; the image has no curl, so use bash.
+      test:
+        - CMD-SHELL
+        - >-
+          exec 3<>/dev/tcp/127.0.0.1/8080 &&
+          printf 'GET /realms/voice/protocol/openid-connect/certs HTTP/1.1\r\nHost: 127.0.0.1\r\nConnection: close\r\n\r\n' >&3 &&
+          grep -q '"keys"' <&3
+      interval: 5s
+      timeout: 5s
+      retries: 60
+      start_period: 20s
+
+networks:
+  docker-control:
+    internal: true
+
+volumes:
+  pgdata:
+  models:
+  workspace:
+  workspace-api:
+  logs:

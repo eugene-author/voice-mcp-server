@@ -1,0 +1,10 @@
+description: User-selected model, denoising and conservative mastering for long-form output.
+stt:
+  beam_size: 5
+  word_timestamps: true
+  segment_flags: true
+  denoise: true
+tts:
+  loudness_normalization: true
+  max_chunk_chars: 400
+  gap_ms: 180

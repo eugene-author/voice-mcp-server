@@ -1,0 +1,187 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1580" viewBox="0 0 1600 1580" role="img" aria-labelledby="title desc">
+<title id="title">Speech-to-Text Pipeline</title>
+<desc id="desc">An MCP call queues a job and identifies its input audio. JobWorker and the audio source feed TranscriptionService, which decodes and optionally denoises audio, transcribes with Whisper, restores timestamps and stages transcript files. The worker publishes the files and returns a job result.</desc>
+<defs><pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0 H0 V32" fill="none" stroke="#dbe7f2" stroke-width="1" opacity=".40"/></pattern>
+<marker id="arrow-amber" viewBox="0 0 20 20" markerWidth="20" markerHeight="20" markerUnits="userSpaceOnUse" refX="18" refY="10" orient="auto"><path d="M0 0 L20 10 L0 20 Z" fill="#f59e0b"/></marker>
+<marker id="arrow-violet" viewBox="0 0 20 20" markerWidth="20" markerHeight="20" markerUnits="userSpaceOnUse" refX="18" refY="10" orient="auto"><path d="M0 0 L20 10 L0 20 Z" fill="#8b5cf6"/></marker>
+<marker id="arrow-cyan" viewBox="0 0 20 20" markerWidth="20" markerHeight="20" markerUnits="userSpaceOnUse" refX="18" refY="10" orient="auto"><path d="M0 0 L20 10 L0 20 Z" fill="#06b6d4"/></marker>
+<marker id="arrow-green" viewBox="0 0 20 20" markerWidth="20" markerHeight="20" markerUnits="userSpaceOnUse" refX="18" refY="10" orient="auto"><path d="M0 0 L20 10 L0 20 Z" fill="#10b981"/></marker>
+<marker id="arrow-blue" viewBox="0 0 20 20" markerWidth="20" markerHeight="20" markerUnits="userSpaceOnUse" refX="18" refY="10" orient="auto"><path d="M0 0 L20 10 L0 20 Z" fill="#2563eb"/></marker>
+<marker id="arrow-slate" viewBox="0 0 20 20" markerWidth="20" markerHeight="20" markerUnits="userSpaceOnUse" refX="18" refY="10" orient="auto"><path d="M0 0 L20 10 L0 20 Z" fill="#475569"/></marker>
+</defs>
+<rect x="0" y="0" width="1600" height="1580" rx="0" fill="#f8fafc"/>
+<rect x="0" y="0" width="1600" height="1580" rx="0" fill="url(#grid)"/>
+<rect x="52" y="165" width="740" height="702" rx="33" fill="#f59e0b" opacity=".045"/>
+<rect x="808" y="165" width="740" height="702" rx="33" fill="#06b6d4" opacity=".045"/>
+<rect x="76" y="906" width="1448" height="292" rx="29" fill="#8b5cf6" opacity=".055"/>
+<rect x="76" y="906" width="1448" height="292" rx="29" fill="none" stroke="#8b5cf6" stroke-opacity=".25" stroke-width="1.5"/>
+<path d="M422.0 363 V425" fill="none" stroke="#f59e0b" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-amber)"/>
+<path d="M422.0 620 V683" fill="none" stroke="#f59e0b" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-amber)"/>
+<path d="M1178.0 363 V425" fill="none" stroke="#06b6d4" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-cyan)"/>
+<path d="M1178.0 620 V683" fill="none" stroke="#06b6d4" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-cyan)"/>
+<path d="M422.0 836 V906" fill="none" stroke="#8b5cf6" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-violet)"/>
+<path d="M1178.0 836 V906" fill="none" stroke="#06b6d4" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-cyan)" stroke-dasharray="10 9"/>
+<path d="M534 1076 H583" fill="none" stroke="#8b5cf6" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-violet)"/>
+<path d="M1017 1076 H1066" fill="none" stroke="#8b5cf6" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-violet)"/>
+<path d="M1283 1174 V1263" fill="none" stroke="#10b981" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-green)"/>
+<path d="M832 1350 H768" fill="none" stroke="#10b981" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-green)"/>
+<g>
+<rect x="76" y="215" width="692" height="153" rx="23" fill="#16324f" opacity=".043"/>
+<rect x="76" y="210" width="692" height="153" rx="23" fill="#ffffff" stroke="#d9e2ec" stroke-width="1.5"/>
+<rect x="76" y="210" width="7" height="153" rx="3.5" fill="#2563eb"/>
+<rect x="102" y="229" width="52" height="52" rx="15" fill="#2563eb" opacity=".12"/><g transform="translate(114 241) scale(1.17)" fill="none" stroke="#214ca8" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4H7a2 2 0 0 0-2 2v3a3 3 0 0 1-2 3 3 3 0 0 1 2 3v3a2 2 0 0 0 2 2h2m6-16h2a2 2 0 0 1 2 2v3a3 3 0 0 0 2 3 3 3 0 0 0-2 3v3a2 2 0 0 1-2 2h-2"/></g>
+<text x="170" y="263" fill="#10223a" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="29" font-weight="700" text-anchor="start">MCP tool call</text>
+<g><rect x="703.53" y="233" width="46.47" height="28" rx="14" fill="#2563eb" opacity=".13"/><text x="716.53" y="251.9" fill="#214ca8" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="14" font-weight="700" text-anchor="start">01</text></g>
+<text x="103" y="304" fill="#526780" font-family="&#x27;DejaVu Sans Mono&#x27;, Consolas, monospace" font-size="20" font-weight="400" text-anchor="start">speech_to_text / transcribe_batch</text>
+<circle cx="107" cy="327.49" r="3.5" fill="#2563eb"/>
+<text x="121" y="334" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="21" font-weight="400" text-anchor="start">Select a model, language and transcription options.</text>
+</g>
+<g>
+<rect x="832" y="215" width="692" height="153" rx="23" fill="#16324f" opacity=".043"/>
+<rect x="832" y="210" width="692" height="153" rx="23" fill="#ffffff" stroke="#d9e2ec" stroke-width="1.5"/>
+<rect x="832" y="210" width="7" height="153" rx="3.5" fill="#06b6d4"/>
+<rect x="858" y="229" width="52" height="52" rx="15" fill="#06b6d4" opacity=".12"/><g transform="translate(870 241) scale(1.17)" fill="none" stroke="#087389" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h8l4 4v14H6zM14 3v5h4M9 12h6m-6 4h6"/></g>
+<text x="926" y="263" fill="#10223a" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="29" font-weight="700" text-anchor="start">Audio source</text>
+<text x="859" y="304" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Single file or batch directory</text>
+<circle cx="863" cy="327.49" r="3.5" fill="#06b6d4"/>
+<text x="877" y="334" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="21" font-weight="400" text-anchor="start">Submit an audio path or a directory for batch jobs.</text>
+</g>
+<g>
+<rect x="76" y="430" width="692" height="195" rx="23" fill="#16324f" opacity=".043"/>
+<rect x="76" y="425" width="692" height="195" rx="23" fill="#ffffff" stroke="#d9e2ec" stroke-width="1.5"/>
+<rect x="76" y="425" width="7" height="195" rx="3.5" fill="#f59e0b"/>
+<rect x="102" y="444" width="52" height="52" rx="15" fill="#f59e0b" opacity=".12"/><g transform="translate(114 456) scale(1.17)" fill="none" stroke="#935108" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 8h8m-8 4h8m-8 4h5"/></g>
+<text x="170" y="478" fill="#10223a" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="29" font-weight="700" text-anchor="start">Queue transcription job</text>
+<g><rect x="703.53" y="448" width="46.47" height="28" rx="14" fill="#f59e0b" opacity=".13"/><text x="716.53" y="466.9" fill="#935108" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="14" font-weight="700" text-anchor="start">02</text></g>
+<text x="103" y="519" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">JobPlanner + JobService</text>
+<circle cx="107" cy="542.49" r="3.5" fill="#f59e0b"/>
+<text x="121" y="549" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="21" font-weight="400" text-anchor="start">Validate allowed paths, file sizes and model options.</text>
+<circle cx="107" cy="570.49" r="3.5" fill="#f59e0b"/>
+<text x="121" y="577" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="21" font-weight="400" text-anchor="start">Create one queued child job per batch file.</text>
+<circle cx="107" cy="598.49" r="3.5" fill="#f59e0b"/>
+<text x="121" y="605" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="21" font-weight="400" text-anchor="start">Commit the queued job in PostgreSQL.</text>
+</g>
+<g>
+<rect x="832" y="430" width="692" height="195" rx="23" fill="#16324f" opacity=".043"/>
+<rect x="832" y="425" width="692" height="195" rx="23" fill="#ffffff" stroke="#d9e2ec" stroke-width="1.5"/>
+<rect x="832" y="425" width="7" height="195" rx="3.5" fill="#06b6d4"/>
+<rect x="858" y="444" width="52" height="52" rx="15" fill="#06b6d4" opacity=".12"/><g transform="translate(870 456) scale(1.17)" fill="none" stroke="#087389" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3v5m0 4v9m7-18v11m0 4v3m7-18v3m0 4v11"/><circle cx="5" cy="10" r="2"/><circle cx="12" cy="16" r="2"/><circle cx="19" cy="8" r="2"/></g>
+<text x="926" y="478" fill="#10223a" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="29" font-weight="700" text-anchor="start">Input transfer mode</text>
+<text x="859" y="519" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Shared path or ingest</text>
+<circle cx="863" cy="542.49" r="3.5" fill="#06b6d4"/>
+<text x="877" y="549" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="21" font-weight="400" text-anchor="start">Shared path keeps the audio on a common filesystem.</text>
+<circle cx="863" cy="570.49" r="3.5" fill="#06b6d4"/>
+<text x="877" y="577" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="21" font-weight="400" text-anchor="start">Ingest uploads the input before the job is committed.</text>
+<circle cx="863" cy="598.49" r="3.5" fill="#06b6d4"/>
+<text x="877" y="605" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="21" font-weight="400" text-anchor="start">S3 ingest lets the worker run on a separate host.</text>
+</g>
+<g>
+<rect x="76" y="688" width="692" height="153" rx="23" fill="#16324f" opacity=".043"/>
+<rect x="76" y="683" width="692" height="153" rx="23" fill="#ffffff" stroke="#d9e2ec" stroke-width="1.5"/>
+<rect x="76" y="683" width="7" height="153" rx="3.5" fill="#8b5cf6"/>
+<rect x="102" y="702" width="52" height="52" rx="15" fill="#8b5cf6" opacity=".12"/><g transform="translate(114 714) scale(1.17)" fill="none" stroke="#6439b6" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="6" width="12" height="12" rx="2"/><rect x="9.5" y="9.5" width="5" height="5" rx="1"/><path d="M9 2v4m6-4v4M9 18v4m6-4v4M2 9h4m-4 6h4m12-6h4m-4 6h4"/></g>
+<text x="170" y="736" fill="#10223a" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="29" font-weight="700" text-anchor="start">JobWorker</text>
+<g><rect x="703.53" y="706" width="46.47" height="28" rx="14" fill="#8b5cf6" opacity=".13"/><text x="716.53" y="724.9" fill="#6439b6" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="14" font-weight="700" text-anchor="start">03</text></g>
+<text x="103" y="777" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">One claim per running job</text>
+<circle cx="107" cy="800.49" r="3.5" fill="#8b5cf6"/>
+<text x="121" y="807" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="21" font-weight="400" text-anchor="start">Claim the job and dispatch to TranscriptionService.</text>
+</g>
+<g>
+<rect x="832" y="688" width="692" height="153" rx="23" fill="#16324f" opacity=".043"/>
+<rect x="832" y="683" width="692" height="153" rx="23" fill="#ffffff" stroke="#d9e2ec" stroke-width="1.5"/>
+<rect x="832" y="683" width="7" height="153" rx="3.5" fill="#06b6d4"/>
+<rect x="858" y="702" width="52" height="52" rx="15" fill="#06b6d4" opacity=".12"/><g transform="translate(870 714) scale(1.17)" fill="none" stroke="#087389" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 9 4.5v9L12 21l-9-4.5v-9L12 3zm0 9 9-4.5M12 12 3 7.5M12 12v9M7.5 5.25l9 4.5"/></g>
+<text x="926" y="736" fill="#10223a" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="29" font-weight="700" text-anchor="start">Readable audio</text>
+<text x="859" y="777" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Audio available to the worker</text>
+<circle cx="863" cy="800.49" r="3.5" fill="#06b6d4"/>
+<text x="877" y="807" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="21" font-weight="400" text-anchor="start">Open the shared path or fetch the uploaded file.</text>
+</g>
+<text x="100" y="953" fill="#10223a" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="29" font-weight="700" text-anchor="start">TranscriptionService</text>
+<g>
+<rect x="100" y="983" width="434" height="196" rx="23" fill="#16324f" opacity=".043"/>
+<rect x="100" y="978" width="434" height="196" rx="23" fill="#ffffff" stroke="#d9e2ec" stroke-width="1.5"/>
+<rect x="100" y="978" width="7" height="196" rx="3.5" fill="#8b5cf6"/>
+<rect x="126" y="997" width="52" height="52" rx="15" fill="#8b5cf6" opacity=".12"/><g transform="translate(138 1009) scale(1.17)" fill="none" stroke="#6439b6" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3v5m0 4v9m7-18v11m0 4v3m7-18v3m0 4v11"/><circle cx="5" cy="10" r="2"/><circle cx="12" cy="16" r="2"/><circle cx="19" cy="8" r="2"/></g>
+<text x="194" y="1031" fill="#10223a" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="24" font-weight="700" text-anchor="start">Decode &amp; denoise</text>
+<circle cx="131" cy="1072.8" r="3.5" fill="#8b5cf6"/>
+<text x="145" y="1079" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Probe duration with FFprobe.</text>
+<circle cx="131" cy="1098.8" r="3.5" fill="#8b5cf6"/>
+<text x="145" y="1105" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">FFmpeg to 16 kHz mono WAV.</text>
+<circle cx="131" cy="1124.8" r="3.5" fill="#8b5cf6"/>
+<text x="145" y="1131" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Optional DeepFilterNet at 48 kHz,</text>
+<text x="145" y="1157" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">then back to 16 kHz.</text>
+</g>
+<g>
+<rect x="583" y="983" width="434" height="196" rx="23" fill="#16324f" opacity=".043"/>
+<rect x="583" y="978" width="434" height="196" rx="23" fill="#ffffff" stroke="#d9e2ec" stroke-width="1.5"/>
+<rect x="583" y="978" width="7" height="196" rx="3.5" fill="#8b5cf6"/>
+<rect x="609" y="997" width="52" height="52" rx="15" fill="#8b5cf6" opacity=".12"/><g transform="translate(621 1009) scale(1.17)" fill="none" stroke="#6439b6" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h3l2-5 3 10 3-13 3 16 2-8h4"/></g>
+<text x="677" y="1031" fill="#10223a" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="24" font-weight="700" text-anchor="start">VAD &amp; transcribe</text>
+<circle cx="614" cy="1072.8" r="3.5" fill="#8b5cf6"/>
+<text x="628" y="1079" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Use optional native VAD or</text>
+<text x="628" y="1105" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">standalone Silero on MLX.</text>
+<circle cx="614" cy="1124.8" r="3.5" fill="#8b5cf6"/>
+<text x="628" y="1131" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Run faster-whisper or mlx-whisper.</text>
+<circle cx="614" cy="1150.8" r="3.5" fill="#8b5cf6"/>
+<text x="628" y="1157" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Use one inference thread.</text>
+</g>
+<g>
+<rect x="1066" y="983" width="434" height="196" rx="23" fill="#16324f" opacity=".043"/>
+<rect x="1066" y="978" width="434" height="196" rx="23" fill="#ffffff" stroke="#d9e2ec" stroke-width="1.5"/>
+<rect x="1066" y="978" width="7" height="196" rx="3.5" fill="#8b5cf6"/>
+<rect x="1092" y="997" width="52" height="52" rx="15" fill="#8b5cf6" opacity=".12"/><g transform="translate(1104 1009) scale(1.17)" fill="none" stroke="#6439b6" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h8l4 4v14H6zM14 3v5h4M9 12h6m-6 4h6"/></g>
+<text x="1160" y="1031" fill="#10223a" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="24" font-weight="700" text-anchor="start">Restore &amp; stage</text>
+<circle cx="1097" cy="1072.8" r="3.5" fill="#8b5cf6"/>
+<text x="1111" y="1079" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Restore source timestamps after</text>
+<text x="1111" y="1105" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">standalone VAD.</text>
+<circle cx="1097" cy="1124.8" r="3.5" fill="#8b5cf6"/>
+<text x="1111" y="1131" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Check transcript quality and stage</text>
+<text x="1111" y="1157" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">files with metadata.</text>
+</g>
+<g>
+<rect x="832" y="1268" width="692" height="174" rx="23" fill="#16324f" opacity=".043"/>
+<rect x="832" y="1263" width="692" height="174" rx="23" fill="#ffffff" stroke="#d9e2ec" stroke-width="1.5"/>
+<rect x="832" y="1263" width="7" height="174" rx="3.5" fill="#10b981"/>
+<rect x="858" y="1282" width="52" height="52" rx="15" fill="#10b981" opacity=".12"/><g transform="translate(870 1294) scale(1.17)" fill="none" stroke="#08785b" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 9 4.5v9L12 21l-9-4.5v-9L12 3zm0 9 9-4.5M12 12 3 7.5M12 12v9M7.5 5.25l9 4.5"/></g>
+<text x="926" y="1316" fill="#10223a" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="29" font-weight="700" text-anchor="start">Publish transcripts</text>
+<g><rect x="1459.53" y="1286" width="46.47" height="28" rx="14" fill="#10b981" opacity=".13"/><text x="1472.53" y="1304.9" fill="#08785b" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="14" font-weight="700" text-anchor="start">04</text></g>
+<text x="859" y="1357" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">TXT / JSON / SRT / VTT</text>
+<circle cx="863" cy="1380.49" r="3.5" fill="#10b981"/>
+<text x="877" y="1387" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="21" font-weight="400" text-anchor="start">Save the files to local storage or S3.</text>
+<circle cx="863" cy="1408.49" r="3.5" fill="#10b981"/>
+<text x="877" y="1415" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="21" font-weight="400" text-anchor="start">Record the results and mark the job complete.</text>
+</g>
+<g>
+<rect x="76" y="1268" width="692" height="174" rx="23" fill="#16324f" opacity=".043"/>
+<rect x="76" y="1263" width="692" height="174" rx="23" fill="#ffffff" stroke="#d9e2ec" stroke-width="1.5"/>
+<rect x="76" y="1263" width="7" height="174" rx="3.5" fill="#06b6d4"/>
+<rect x="102" y="1282" width="52" height="52" rx="15" fill="#06b6d4" opacity=".12"/><g transform="translate(114 1294) scale(1.17)" fill="none" stroke="#087389" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="m8 12 2.5 2.5 5.5-6"/></g>
+<text x="170" y="1316" fill="#10223a" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="29" font-weight="700" text-anchor="start">MCP result</text>
+<g><rect x="703.53" y="1286" width="46.47" height="28" rx="14" fill="#06b6d4" opacity=".13"/><text x="716.53" y="1304.9" fill="#087389" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="14" font-weight="700" text-anchor="start">05</text></g>
+<text x="103" y="1357" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Job ID, status and transcript files</text>
+<circle cx="107" cy="1380.49" r="3.5" fill="#06b6d4"/>
+<text x="121" y="1387" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="21" font-weight="400" text-anchor="start">Get a text preview, language and duration.</text>
+<circle cx="107" cy="1408.49" r="3.5" fill="#06b6d4"/>
+<text x="121" y="1415" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="21" font-weight="400" text-anchor="start">Receive it inline or call get_job(job_id).</text>
+</g>
+<rect x="76" y="1470" width="1448" height="82" rx="20" fill="#ffffff" stroke="#8b5cf6" stroke-opacity=".30" stroke-width="1.4"/>
+<rect x="76" y="1470" width="1448" height="82" rx="20" fill="#8b5cf6" opacity=".045"/>
+<text x="102" y="1505" fill="#10223a" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="22" font-weight="700" text-anchor="start">Batch processing and publish retries</text>
+<text x="102" y="1535" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">The batch parent publishes a manifest. Publish retries can reuse staged transcripts.</text>
+<g><rect x="76" y="167" width="301.23" height="31" rx="15" fill="#f59e0b" opacity=".13"/><circle cx="92" cy="182.5" r="4.7" fill="#f59e0b"/><text x="105" y="187.75" fill="#10223a" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="15" font-weight="700" text-anchor="start">PER TRANSCRIPTION REQUEST</text></g>
+<g><rect x="832" y="167" width="153.88" height="31" rx="15" fill="#06b6d4" opacity=".13"/><circle cx="848" cy="182.5" r="4.7" fill="#06b6d4"/><text x="861" y="187.75" fill="#10223a" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="15" font-weight="700" text-anchor="start">AUDIO INPUT</text></g>
+<g><rect x="360.65" y="378.5" width="122.7" height="31" rx="15" fill="#f8fafc" stroke="#f59e0b" stroke-opacity=".48" stroke-width="1.25"/><text x="373.65" y="399.6" fill="#935108" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="16" font-weight="700" text-anchor="start">submit job</text></g>
+<g><rect x="351.06" y="636.0" width="141.88" height="31" rx="15" fill="#f8fafc" stroke="#f59e0b" stroke-opacity=".48" stroke-width="1.25"/><text x="364.06" y="657.1" fill="#935108" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="16" font-weight="700" text-anchor="start">wake worker</text></g>
+<g><rect x="1108.03" y="378.5" width="139.94" height="31" rx="15" fill="#f8fafc" stroke="#06b6d4" stroke-opacity=".48" stroke-width="1.25"/><text x="1121.03" y="399.6" fill="#087389" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="16" font-weight="700" text-anchor="start">resolve path</text></g>
+<g><rect x="1109.01" y="636.0" width="137.98" height="31" rx="15" fill="#f8fafc" stroke="#06b6d4" stroke-opacity=".48" stroke-width="1.25"/><text x="1122.01" y="657.1" fill="#087389" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="16" font-weight="700" text-anchor="start">locate audio</text></g>
+<g><rect x="1302.58" y="929" width="196.42" height="31" rx="15" fill="#8b5cf6" opacity=".13"/><circle cx="1318.58" cy="944.5" r="4.7" fill="#8b5cf6"/><text x="1331.58" y="949.75" fill="#10223a" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="15" font-weight="700" text-anchor="start">LOCAL INFERENCE</text></g>
+<g><rect x="372.78" y="855.5" width="98.44" height="31" rx="15" fill="#f8fafc" stroke="#8b5cf6" stroke-opacity=".48" stroke-width="1.25"/><text x="385.78" y="876.6" fill="#6439b6" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="16" font-weight="700" text-anchor="start">execute</text></g>
+<g><rect x="1112.96" y="855.5" width="130.08" height="31" rx="15" fill="#f8fafc" stroke="#06b6d4" stroke-opacity=".48" stroke-width="1.25"/><text x="1125.96" y="876.6" fill="#087389" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="16" font-weight="700" text-anchor="start">input audio</text></g>
+<g><rect x="1150.57" y="1203.0" width="264.86" height="31" rx="15" fill="#f8fafc" stroke="#10b981" stroke-opacity=".48" stroke-width="1.25"/><text x="1163.57" y="1224.1" fill="#08785b" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="16" font-weight="700" text-anchor="start">publish staged transcripts</text></g>
+<text x="72" y="77" fill="#10223a" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="43" font-weight="700" text-anchor="start">Speech-to-Text Pipeline</text>
+<text x="72" y="117" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="22" font-weight="400" text-anchor="start">Transcribe one file or a batch and publish text, JSON and subtitles.</text>
+<g><rect x="968.28" y="48" width="121.02" height="31" rx="15" fill="#f59e0b" opacity=".13"/><circle cx="984.28" cy="63.5" r="4.7" fill="#f59e0b"/><text x="997.28" y="68.75" fill="#10223a" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="15" font-weight="700" text-anchor="start">REQUEST</text></g>
+<g><rect x="1101.3" y="48" width="153.88" height="31" rx="15" fill="#06b6d4" opacity=".13"/><circle cx="1117.3" cy="63.5" r="4.7" fill="#06b6d4"/><text x="1130.3" y="68.75" fill="#10223a" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="15" font-weight="700" text-anchor="start">AUDIO INPUT</text></g>
+<g><rect x="1267.1799999999998" y="48" width="137.23" height="31" rx="15" fill="#8b5cf6" opacity=".13"/><circle cx="1283.1799999999998" cy="63.5" r="4.7" fill="#8b5cf6"/><text x="1296.1799999999998" y="68.75" fill="#10223a" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="15" font-weight="700" text-anchor="start">INFERENCE</text></g>
+<g><rect x="1416.4099999999999" y="48" width="111.59" height="31" rx="15" fill="#10b981" opacity=".13"/><circle cx="1432.4099999999999" cy="63.5" r="4.7" fill="#10b981"/><text x="1445.4099999999999" y="68.75" fill="#10223a" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="15" font-weight="700" text-anchor="start">OUTPUT</text></g>
+</svg>

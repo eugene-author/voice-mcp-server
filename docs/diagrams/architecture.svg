@@ -1,0 +1,241 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1580" viewBox="0 0 1600 1580" role="img" aria-labelledby="title desc">
+<title id="title">Voice MCP Server</title>
+<desc id="desc">Clients call the MCP API and receive a job view. New jobs are committed to PostgreSQL. One active worker claims jobs, runs inference, publishes files, and records outcomes. In split mode an optional WakeController observes the same jobs and worker registry, starts the configured Docker or ECS target, and drains the worker when idle.</desc>
+<defs><pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0 H0 V32" fill="none" stroke="#dbe7f2" stroke-width="1" opacity=".40"/></pattern>
+<marker id="arrow-amber" viewBox="0 0 20 20" markerWidth="20" markerHeight="20" markerUnits="userSpaceOnUse" refX="18" refY="10" orient="auto"><path d="M0 0 L20 10 L0 20 Z" fill="#f59e0b"/></marker>
+<marker id="arrow-violet" viewBox="0 0 20 20" markerWidth="20" markerHeight="20" markerUnits="userSpaceOnUse" refX="18" refY="10" orient="auto"><path d="M0 0 L20 10 L0 20 Z" fill="#8b5cf6"/></marker>
+<marker id="arrow-cyan" viewBox="0 0 20 20" markerWidth="20" markerHeight="20" markerUnits="userSpaceOnUse" refX="18" refY="10" orient="auto"><path d="M0 0 L20 10 L0 20 Z" fill="#06b6d4"/></marker>
+<marker id="arrow-green" viewBox="0 0 20 20" markerWidth="20" markerHeight="20" markerUnits="userSpaceOnUse" refX="18" refY="10" orient="auto"><path d="M0 0 L20 10 L0 20 Z" fill="#10b981"/></marker>
+<marker id="arrow-blue" viewBox="0 0 20 20" markerWidth="20" markerHeight="20" markerUnits="userSpaceOnUse" refX="18" refY="10" orient="auto"><path d="M0 0 L20 10 L0 20 Z" fill="#2563eb"/></marker>
+<marker id="arrow-slate" viewBox="0 0 20 20" markerWidth="20" markerHeight="20" markerUnits="userSpaceOnUse" refX="18" refY="10" orient="auto"><path d="M0 0 L20 10 L0 20 Z" fill="#475569"/></marker>
+</defs>
+<rect x="0" y="0" width="1600" height="1580" rx="0" fill="#f8fafc"/>
+<rect x="0" y="0" width="1600" height="1580" rx="0" fill="url(#grid)"/>
+<rect x="52" y="165" width="1496" height="258" rx="33" fill="#f59e0b" opacity=".045"/>
+<rect x="52" y="475" width="472" height="917" rx="33" fill="#f59e0b" opacity=".045"/>
+<rect x="564" y="475" width="472" height="917" rx="33" fill="#8b5cf6" opacity=".045"/>
+<rect x="1076" y="475" width="472" height="917" rx="33" fill="#06b6d4" opacity=".045"/>
+<path d="M500 305 H588" fill="none" stroke="#f59e0b" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-amber)"/>
+<path d="M1012 305 H1100" fill="none" stroke="#06b6d4" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-cyan)"/>
+<path d="M700 402 V429 Q700 444 685 444 H413 Q398 444 398 459 V524" fill="none" stroke="#f59e0b" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-amber)"/>
+<path d="M930 524 V402" fill="none" stroke="#06b6d4" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-cyan)"/>
+<path d="M500 620 H588" fill="none" stroke="#f59e0b" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-amber)"/>
+<path d="M1012 595 H1100" fill="none" stroke="#10b981" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-green)" stroke-dasharray="10 9"/>
+<path d="M1100 664 H1012" fill="none" stroke="#10b981" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-green)" stroke-dasharray="10 9"/>
+<path d="M680 720 V802" fill="none" stroke="#f59e0b" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-amber)"/>
+<path d="M930 802 V720" fill="none" stroke="#10b981" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-green)" stroke-dasharray="10 9"/>
+<path d="M1312 720 V802" fill="none" stroke="#f59e0b" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-amber)"/>
+<path d="M500 915 H588" fill="none" stroke="#06b6d4" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-cyan)"/>
+<path d="M1100 915 H1012" fill="none" stroke="#8b5cf6" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-violet)"/>
+<path d="M680 1044 V1120" fill="none" stroke="#8b5cf6" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-violet)"/>
+<path d="M930 1120 V1044" fill="none" stroke="#10b981" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-green)"/>
+<path d="M588 1234 H500" fill="none" stroke="#06b6d4" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-cyan)"/>
+<path d="M1012 1005 H1040 Q1056 1005 1056 1021 V1153 Q1056 1169 1072 1169 H1100" fill="none" stroke="#10b981" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-green)" stroke-dasharray="10 9"/>
+<g>
+<rect x="76" y="215" width="424" height="192" rx="23" fill="#16324f" opacity=".043"/>
+<rect x="76" y="210" width="424" height="192" rx="23" fill="#ffffff" stroke="#d9e2ec" stroke-width="1.5"/>
+<rect x="76" y="210" width="7" height="192" rx="3.5" fill="#475569"/>
+<rect x="102" y="229" width="52" height="52" rx="15" fill="#475569" opacity=".12"/><g transform="translate(114 241) scale(1.17)" fill="none" stroke="#475569" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="3"/><path d="M3 20v-2a5 5 0 0 1 5-5h2a5 5 0 0 1 5 5v2M16 4a3 3 0 0 1 0 6m2 3a5 5 0 0 1 3 5v2"/></g>
+<text x="170" y="263" fill="#10223a" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="28" font-weight="700" text-anchor="start">AI agents &amp; clients</text>
+<text x="103" y="304" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">MCP tool calls</text>
+<circle cx="107" cy="327.8" r="3.5" fill="#475569"/>
+<text x="121" y="334" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Invoke speech and voice tools.</text>
+<circle cx="107" cy="353.8" r="3.5" fill="#475569"/>
+<text x="121" y="360" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Send a bearer token over HTTP.</text>
+</g>
+<g>
+<rect x="588" y="215" width="424" height="192" rx="23" fill="#16324f" opacity=".043"/>
+<rect x="588" y="210" width="424" height="192" rx="23" fill="#ffffff" stroke="#d9e2ec" stroke-width="1.5"/>
+<rect x="588" y="210" width="7" height="192" rx="3.5" fill="#2563eb"/>
+<rect x="614" y="229" width="52" height="52" rx="15" fill="#2563eb" opacity=".12"/><g transform="translate(626 241) scale(1.17)" fill="none" stroke="#214ca8" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 4-3.2 7-8 9-4.8-2-8-5-8-9V6l8-3z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></g>
+<text x="682" y="263" fill="#10223a" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="28" font-weight="700" text-anchor="start">MCP Server</text>
+<text x="615" y="304" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Streamable HTTP or local stdio</text>
+<circle cx="619" cy="327.8" r="3.5" fill="#2563eb"/>
+<text x="633" y="334" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Verify HTTP JWTs and scopes.</text>
+<circle cx="619" cy="353.8" r="3.5" fill="#2563eb"/>
+<text x="633" y="360" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Local stdio uses the OS user.</text>
+</g>
+<g>
+<rect x="1100" y="215" width="424" height="192" rx="23" fill="#16324f" opacity=".043"/>
+<rect x="1100" y="210" width="424" height="192" rx="23" fill="#ffffff" stroke="#d9e2ec" stroke-width="1.5"/>
+<rect x="1100" y="210" width="7" height="192" rx="3.5" fill="#06b6d4"/>
+<rect x="1126" y="229" width="52" height="52" rx="15" fill="#06b6d4" opacity=".12"/><g transform="translate(1138 241) scale(1.17)" fill="none" stroke="#087389" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="m8 12 2.5 2.5 5.5-6"/></g>
+<text x="1194" y="263" fill="#10223a" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="28" font-weight="700" text-anchor="start">MCP response</text>
+<text x="1127" y="304" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Job envelope</text>
+<circle cx="1131" cy="327.8" r="3.5" fill="#06b6d4"/>
+<text x="1145" y="334" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Return job ID and current status.</text>
+<circle cx="1131" cy="353.8" r="3.5" fill="#06b6d4"/>
+<text x="1145" y="360" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Wait briefly or call get_job.</text>
+<circle cx="1131" cy="379.8" r="3.5" fill="#06b6d4"/>
+<text x="1145" y="386" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Include file locations once ready.</text>
+</g>
+<g>
+<rect x="76" y="529" width="424" height="196" rx="23" fill="#16324f" opacity=".043"/>
+<rect x="76" y="524" width="424" height="196" rx="23" fill="#ffffff" stroke="#d9e2ec" stroke-width="1.5"/>
+<rect x="76" y="524" width="7" height="196" rx="3.5" fill="#f59e0b"/>
+<rect x="102" y="543" width="52" height="52" rx="15" fill="#f59e0b" opacity=".12"/><g transform="translate(114 555) scale(1.17)" fill="none" stroke="#935108" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 8h8m-8 4h8m-8 4h5"/></g>
+<text x="170" y="577" fill="#10223a" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="28" font-weight="700" text-anchor="start">Queue a job</text>
+<text x="103" y="618" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">JobService + JobPlanner</text>
+<circle cx="107" cy="641.8" r="3.5" fill="#f59e0b"/>
+<text x="121" y="648" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Resolve input paths and options.</text>
+<circle cx="107" cy="667.8" r="3.5" fill="#f59e0b"/>
+<text x="121" y="674" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Deduplicate by request_id.</text>
+<circle cx="107" cy="693.8" r="3.5" fill="#f59e0b"/>
+<text x="121" y="700" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Commit before waking a worker.</text>
+</g>
+<g>
+<rect x="588" y="529" width="424" height="196" rx="23" fill="#16324f" opacity=".043"/>
+<rect x="588" y="524" width="424" height="196" rx="23" fill="#ffffff" stroke="#d9e2ec" stroke-width="1.5"/>
+<rect x="588" y="524" width="7" height="196" rx="3.5" fill="#10b981"/>
+<rect x="614" y="543" width="52" height="52" rx="15" fill="#10b981" opacity=".12"/><g transform="translate(626 555) scale(1.17)" fill="none" stroke="#08785b" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6" rx="8" ry="3.2"/><path d="M4 6v12c0 1.8 3.6 3.2 8 3.2s8-1.4 8-3.2V6M4 12c0 1.8 3.6 3.2 8 3.2s8-1.4 8-3.2"/></g>
+<text x="682" y="577" fill="#10223a" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="28" font-weight="700" text-anchor="start">PostgreSQL</text>
+<text x="615" y="618" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Jobs, events and worker registry</text>
+<circle cx="619" cy="641.8" r="3.5" fill="#10b981"/>
+<text x="633" y="648" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Persist job state and asset links.</text>
+<circle cx="619" cy="667.8" r="3.5" fill="#10b981"/>
+<text x="633" y="674" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Store worker capabilities.</text>
+<circle cx="619" cy="693.8" r="3.5" fill="#10b981"/>
+<text x="633" y="700" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Recovery polls.</text>
+</g>
+<g>
+<rect x="1100" y="529" width="424" height="196" rx="23" fill="#16324f" opacity=".043"/>
+<rect x="1100" y="524" width="424" height="196" rx="23" fill="#ffffff" stroke="#d9e2ec" stroke-width="1.5"/>
+<rect x="1100" y="524" width="7" height="196" rx="3.5" fill="#f59e0b"/>
+<rect x="1126" y="543" width="52" height="52" rx="15" fill="#f59e0b" opacity=".12"/><g transform="translate(1138 555) scale(1.17)" fill="none" stroke="#935108" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17h18M5 14l4-4 4 2 5-6m-4 0h4v4"/></g>
+<text x="1194" y="577" fill="#10223a" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="28" font-weight="700" text-anchor="start">WakeController</text>
+<text x="1127" y="618" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">One active controller in the API</text>
+<circle cx="1131" cy="641.8" r="3.5" fill="#f59e0b"/>
+<text x="1145" y="648" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Read jobs, schedule and target.</text>
+<circle cx="1131" cy="667.8" r="3.5" fill="#f59e0b"/>
+<text x="1145" y="674" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Wake for work or a warm window.</text>
+<circle cx="1131" cy="693.8" r="3.5" fill="#f59e0b"/>
+<text x="1145" y="700" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Drain when idle outside windows.</text>
+</g>
+<g>
+<rect x="76" y="807" width="424" height="242" rx="23" fill="#16324f" opacity=".043"/>
+<rect x="76" y="802" width="424" height="242" rx="23" fill="#ffffff" stroke="#d9e2ec" stroke-width="1.5"/>
+<rect x="76" y="802" width="7" height="242" rx="3.5" fill="#06b6d4"/>
+<rect x="102" y="821" width="52" height="52" rx="15" fill="#06b6d4" opacity=".12"/><g transform="translate(114 833) scale(1.17)" fill="none" stroke="#087389" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h8l4 4v14H6zM14 3v5h4M9 12h6m-6 4h6"/></g>
+<text x="170" y="855" fill="#10223a" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="28" font-weight="700" text-anchor="start">Audio inputs</text>
+<text x="103" y="896" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Shared path or ingest</text>
+<circle cx="107" cy="919.8" r="3.5" fill="#06b6d4"/>
+<text x="121" y="926" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Read a shared file path.</text>
+<circle cx="107" cy="945.8" r="3.5" fill="#06b6d4"/>
+<text x="121" y="952" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Ingest uploads before commit.</text>
+<circle cx="107" cy="971.8" r="3.5" fill="#06b6d4"/>
+<text x="121" y="978" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Workers fetch the uploaded file.</text>
+<circle cx="107" cy="997.8" r="3.5" fill="#06b6d4"/>
+<text x="121" y="1004" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Use S3 across machines.</text>
+</g>
+<g>
+<rect x="588" y="807" width="424" height="242" rx="23" fill="#16324f" opacity=".043"/>
+<rect x="588" y="802" width="424" height="242" rx="23" fill="#ffffff" stroke="#d9e2ec" stroke-width="1.5"/>
+<rect x="588" y="802" width="7" height="242" rx="3.5" fill="#8b5cf6"/>
+<rect x="614" y="821" width="52" height="52" rx="15" fill="#8b5cf6" opacity=".12"/><g transform="translate(626 833) scale(1.17)" fill="none" stroke="#6439b6" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="6" width="12" height="12" rx="2"/><rect x="9.5" y="9.5" width="5" height="5" rx="1"/><path d="M9 2v4m6-4v4M9 18v4m6-4v4M2 9h4m-4 6h4m12-6h4m-4 6h4"/></g>
+<text x="682" y="855" fill="#10223a" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="28" font-weight="700" text-anchor="start">JobWorker</text>
+<text x="615" y="896" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">One active inference worker</text>
+<circle cx="619" cy="919.8" r="3.5" fill="#8b5cf6"/>
+<text x="633" y="926" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Claim one job at a time.</text>
+<circle cx="619" cy="945.8" r="3.5" fill="#8b5cf6"/>
+<text x="633" y="952" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Wake on NOTIFY or poll for work.</text>
+<circle cx="619" cy="971.8" r="3.5" fill="#8b5cf6"/>
+<text x="633" y="978" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Report heartbeat and capabilities.</text>
+<circle cx="619" cy="997.8" r="3.5" fill="#8b5cf6"/>
+<text x="633" y="1004" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Protect writes with a claim token.</text>
+</g>
+<g>
+<rect x="1100" y="807" width="424" height="242" rx="23" fill="#16324f" opacity=".043"/>
+<rect x="1100" y="802" width="424" height="242" rx="23" fill="#ffffff" stroke="#d9e2ec" stroke-width="1.5"/>
+<rect x="1100" y="802" width="7" height="242" rx="3.5" fill="#8b5cf6"/>
+<rect x="1126" y="821" width="52" height="52" rx="15" fill="#8b5cf6" opacity=".12"/><g transform="translate(1138 833) scale(1.17)" fill="none" stroke="#6439b6" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M7 9v6m5-6v6m5-6v6M6 18v2m12-2v2"/></g>
+<text x="1194" y="855" fill="#10223a" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="28" font-weight="700" text-anchor="start">Compute target</text>
+<text x="1127" y="896" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Choose Docker or AWS ECS</text>
+<circle cx="1131" cy="919.8" r="3.5" fill="#8b5cf6"/>
+<text x="1145" y="926" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Docker controls one container via</text>
+<text x="1145" y="952" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">a restricted socket proxy.</text>
+<circle cx="1131" cy="971.8" r="3.5" fill="#8b5cf6"/>
+<text x="1145" y="978" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">AWS ECS sets desiredCount to 1</text>
+<text x="1145" y="1004" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">or 0 on a GPU EC2 service.</text>
+</g>
+<g>
+<rect x="76" y="1125" width="424" height="244" rx="23" fill="#16324f" opacity=".043"/>
+<rect x="76" y="1120" width="424" height="244" rx="23" fill="#ffffff" stroke="#d9e2ec" stroke-width="1.5"/>
+<rect x="76" y="1120" width="7" height="244" rx="3.5" fill="#06b6d4"/>
+<rect x="102" y="1139" width="52" height="52" rx="15" fill="#06b6d4" opacity=".12"/><g transform="translate(114 1151) scale(1.17)" fill="none" stroke="#087389" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 9 4.5v9L12 21l-9-4.5v-9L12 3zm0 9 9-4.5M12 12 3 7.5M12 12v9M7.5 5.25l9 4.5"/></g>
+<text x="170" y="1173" fill="#10223a" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="28" font-weight="700" text-anchor="start">Asset store</text>
+<text x="103" y="1214" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Local disk or Amazon S3</text>
+<circle cx="107" cy="1237.8" r="3.5" fill="#06b6d4"/>
+<text x="121" y="1244" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Store transcripts and audio.</text>
+<circle cx="107" cy="1263.8" r="3.5" fill="#06b6d4"/>
+<text x="121" y="1270" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Keep inputs and voice references.</text>
+<circle cx="107" cy="1289.8" r="3.5" fill="#06b6d4"/>
+<text x="121" y="1296" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Return file paths or S3 URIs.</text>
+</g>
+<g>
+<rect x="588" y="1125" width="424" height="244" rx="23" fill="#16324f" opacity=".043"/>
+<rect x="588" y="1120" width="424" height="244" rx="23" fill="#ffffff" stroke="#d9e2ec" stroke-width="1.5"/>
+<rect x="588" y="1120" width="7" height="244" rx="3.5" fill="#8b5cf6"/>
+<rect x="614" y="1139" width="52" height="52" rx="15" fill="#8b5cf6" opacity=".12"/><g transform="translate(626 1151) scale(1.17)" fill="none" stroke="#6439b6" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h3l2-5 3 10 3-13 3 16 2-8h4"/></g>
+<text x="682" y="1173" fill="#10223a" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="27" font-weight="700" text-anchor="start">Inference &amp; publish</text>
+<text x="615" y="1214" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">ModelHost + AssetPublisher</text>
+<circle cx="619" cy="1237.8" r="3.5" fill="#8b5cf6"/>
+<text x="633" y="1244" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Run STT, TTS or voice registration.</text>
+<circle cx="619" cy="1263.8" r="3.5" fill="#8b5cf6"/>
+<text x="633" y="1270" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Load or preload local models.</text>
+<circle cx="619" cy="1289.8" r="3.5" fill="#8b5cf6"/>
+<text x="633" y="1296" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Stage files before publication.</text>
+<circle cx="619" cy="1315.8" r="3.5" fill="#8b5cf6"/>
+<text x="633" y="1322" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Return results for the DB commit.</text>
+</g>
+<g>
+<rect x="1100" y="1125" width="424" height="244" rx="23" fill="#16324f" opacity=".043"/>
+<rect x="1100" y="1120" width="424" height="244" rx="23" fill="#ffffff" stroke="#d9e2ec" stroke-width="1.5"/>
+<rect x="1100" y="1120" width="7" height="244" rx="3.5" fill="#10b981"/>
+<rect x="1126" y="1139" width="52" height="52" rx="15" fill="#10b981" opacity=".12"/><g transform="translate(1138 1151) scale(1.17)" fill="none" stroke="#08785b" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v8M7.3 5.6a8 8 0 1 0 9.4 0"/></g>
+<text x="1194" y="1173" fill="#10223a" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="28" font-weight="700" text-anchor="start">Graceful drain</text>
+<text x="1127" y="1214" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Drain request in the registry</text>
+<circle cx="1131" cy="1237.8" r="3.5" fill="#10b981"/>
+<text x="1145" y="1244" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Stop claiming new jobs.</text>
+<circle cx="1131" cy="1263.8" r="3.5" fill="#10b981"/>
+<text x="1145" y="1270" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Finish active work.</text>
+<circle cx="1131" cy="1289.8" r="3.5" fill="#10b981"/>
+<text x="1145" y="1296" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Requeue at the drain deadline.</text>
+<circle cx="1131" cy="1315.8" r="3.5" fill="#10b981"/>
+<text x="1145" y="1322" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Cancel drain if new work arrives.</text>
+<circle cx="1131" cy="1341.8" r="3.5" fill="#10b981"/>
+<text x="1145" y="1348" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Stop target after the worker exits.</text>
+</g>
+<rect x="76" y="1425" width="692" height="116" rx="20" fill="#ffffff" stroke="#2563eb" stroke-opacity=".30" stroke-width="1.4"/>
+<rect x="76" y="1425" width="692" height="116" rx="20" fill="#2563eb" opacity=".045"/>
+<text x="102" y="1460" fill="#10223a" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="22" font-weight="700" text-anchor="start">Deployment roles</text>
+<text x="102" y="1490" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Run together or split the API and worker. In split mode, the API</text>
+<text x="102" y="1517" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">serves requests while the GPU is off.</text>
+<rect x="832" y="1425" width="692" height="116" rx="20" fill="#ffffff" stroke="#10b981" stroke-opacity=".30" stroke-width="1.4"/>
+<rect x="832" y="1425" width="692" height="116" rx="20" fill="#10b981" opacity=".045"/>
+<text x="858" y="1460" fill="#10223a" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="22" font-weight="700" text-anchor="start">Independent compute scaling</text>
+<text x="858" y="1490" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">Scale API replicas separately. On AWS, the capacity provider</text>
+<text x="858" y="1517" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start">controls GPU host scaling.</text>
+<g><rect x="76" y="167" width="276.62" height="31" rx="15" fill="#f59e0b" opacity=".13"/><circle cx="92" cy="182.5" r="4.7" fill="#f59e0b"/><text x="105" y="187.75" fill="#10223a" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="15" font-weight="700" text-anchor="start">MCP REQUEST &amp; RESPONSE</text></g>
+<g><rect x="76" y="477" width="237.05" height="31" rx="15" fill="#f59e0b" opacity=".13"/><circle cx="92" cy="492.5" r="4.7" fill="#f59e0b"/><text x="105" y="497.75" fill="#10223a" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="15" font-weight="700" text-anchor="start">SUBMISSION &amp; ASSETS</text></g>
+<g><rect x="588" y="477" width="201.31" height="31" rx="15" fill="#8b5cf6" opacity=".13"/><circle cx="604" cy="492.5" r="4.7" fill="#8b5cf6"/><text x="617" y="497.75" fill="#10223a" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="15" font-weight="700" text-anchor="start">JOBS &amp; INFERENCE</text></g>
+<g><rect x="1100" y="477" width="275.09" height="31" rx="15" fill="#06b6d4" opacity=".13"/><circle cx="1116" cy="492.5" r="4.7" fill="#06b6d4"/><text x="1129" y="497.75" fill="#10223a" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="15" font-weight="700" text-anchor="start">ON-DEMAND GPU CONTROL</text></g>
+<g><rect x="442.44" y="428.5" width="205.12" height="31" rx="15" fill="#f8fafc" stroke="#f59e0b" stroke-opacity=".48" stroke-width="1.25"/><text x="455.44" y="449.6" fill="#935108" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="16" font-weight="700" text-anchor="start">submit tool request</text></g>
+<g><rect x="855.67" y="447.5" width="148.66" height="31" rx="15" fill="#f8fafc" stroke="#06b6d4" stroke-opacity=".48" stroke-width="1.25"/><text x="868.67" y="468.6" fill="#087389" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="16" font-weight="700" text-anchor="start">read job view</text></g>
+<g><rect x="1024.56" y="579.5" width="62.88" height="31" rx="15" fill="#f8fafc" stroke="#10b981" stroke-opacity=".48" stroke-width="1.25"/><text x="1037.56" y="599.9" fill="#08785b" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="14" font-weight="700" text-anchor="start">read</text></g>
+<g><rect x="1021.93" y="648.5" width="68.14" height="31" rx="15" fill="#f8fafc" stroke="#10b981" stroke-opacity=".48" stroke-width="1.25"/><text x="1034.9299999999998" y="668.9" fill="#08785b" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="14" font-weight="700" text-anchor="start">drain</text></g>
+<g><rect x="621.015" y="745.5" width="117.97" height="31" rx="15" fill="#f8fafc" stroke="#f59e0b" stroke-opacity=".48" stroke-width="1.25"/><text x="634.015" y="766.6" fill="#935108" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="16" font-weight="700" text-anchor="start">claim jobs</text></g>
+<g><rect x="840.0699999999999" y="745.5" width="179.86" height="31" rx="15" fill="#f8fafc" stroke="#10b981" stroke-opacity=".48" stroke-width="1.25"/><text x="853.0699999999999" y="766.6" fill="#08785b" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="16" font-weight="700" text-anchor="start">heartbeat / state</text></g>
+<g><rect x="1248.415" y="745.5" width="127.17" height="31" rx="15" fill="#f8fafc" stroke="#f59e0b" stroke-opacity=".48" stroke-width="1.25"/><text x="1261.415" y="766.6" fill="#935108" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="16" font-weight="700" text-anchor="start">start / stop</text></g>
+<g><rect x="509.78" y="899.5" width="68.44" height="31" rx="15" fill="#f8fafc" stroke="#06b6d4" stroke-opacity=".48" stroke-width="1.25"/><text x="522.78" y="919.9" fill="#087389" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="14" font-weight="700" text-anchor="start">input</text></g>
+<g><rect x="1023.47" y="899.5" width="65.06" height="31" rx="15" fill="#f8fafc" stroke="#8b5cf6" stroke-opacity=".48" stroke-width="1.25"/><text x="1036.47" y="919.9" fill="#6439b6" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="14" font-weight="700" text-anchor="start">start</text></g>
+<g><rect x="630.78" y="1066.5" width="98.44" height="31" rx="15" fill="#f8fafc" stroke="#8b5cf6" stroke-opacity=".48" stroke-width="1.25"/><text x="643.78" y="1087.6" fill="#6439b6" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="16" font-weight="700" text-anchor="start">execute</text></g>
+<g><rect x="877.47" y="1066.5" width="105.06" height="31" rx="15" fill="#f8fafc" stroke="#10b981" stroke-opacity=".48" stroke-width="1.25"/><text x="890.47" y="1087.6" fill="#08785b" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="16" font-weight="700" text-anchor="start">outcome</text></g>
+<g><rect x="514.0" y="1218.5" width="60.0" height="31" rx="15" fill="#f8fafc" stroke="#06b6d4" stroke-opacity=".48" stroke-width="1.25"/><text x="527.0" y="1238.9" fill="#087389" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="14" font-weight="700" text-anchor="start">files</text></g>
+<g><rect x="1021.93" y="1066.5" width="68.14" height="31" rx="15" fill="#f8fafc" stroke="#10b981" stroke-opacity=".48" stroke-width="1.25"/><text x="1034.9299999999998" y="1086.9" fill="#08785b" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="14" font-weight="700" text-anchor="start">drain</text></g>
+<text x="72" y="77" fill="#10223a" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="43" font-weight="700" text-anchor="start">Voice MCP Server</text>
+<text x="72" y="117" fill="#526780" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="22" font-weight="400" text-anchor="start">MCP requests, durable jobs, local inference, and optional GPU control.</text>
+<g><rect x="832.8299999999999" y="48" width="217.34" height="31" rx="15" fill="#f59e0b" opacity=".13"/><circle cx="848.8299999999999" cy="63.5" r="4.7" fill="#f59e0b"/><text x="861.8299999999999" y="68.75" fill="#10223a" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="15" font-weight="700" text-anchor="start">REQUEST / CONTROL</text></g>
+<g><rect x="1062.1699999999998" y="48" width="137.23" height="31" rx="15" fill="#8b5cf6" opacity=".13"/><circle cx="1078.1699999999998" cy="63.5" r="4.7" fill="#8b5cf6"/><text x="1091.1699999999998" y="68.75" fill="#10223a" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="15" font-weight="700" text-anchor="start">INFERENCE</text></g>
+<g><rect x="1211.3999999999999" y="48" width="175.83" height="31" rx="15" fill="#06b6d4" opacity=".13"/><circle cx="1227.3999999999999" cy="63.5" r="4.7" fill="#06b6d4"/><text x="1240.3999999999999" y="68.75" fill="#10223a" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="15" font-weight="700" text-anchor="start">MEDIA / RESULT</text></g>
+<g><rect x="1399.2299999999998" y="48" width="128.77" height="31" rx="15" fill="#10b981" opacity=".13"/><circle cx="1415.2299999999998" cy="63.5" r="4.7" fill="#10b981"/><text x="1428.2299999999998" y="68.75" fill="#10223a" font-family="Inter, &#x27;DejaVu Sans&#x27;, Arial, sans-serif" font-size="15" font-weight="700" text-anchor="start">JOB STATE</text></g>
+</svg>

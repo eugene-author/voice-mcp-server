@@ -1,0 +1,26 @@
+# NVIDIA GPU override; requires the NVIDIA Container Toolkit on the host.
+services:
+  app:
+    image: voice-mcp:cuda
+    build:
+      args:
+        VARIANT: cuda
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+  gpu-worker:
+    image: voice-mcp:cuda
+    build:
+      args:
+        VARIANT: cuda
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]

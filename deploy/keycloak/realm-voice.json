@@ -1,0 +1,75 @@
+{
+  "realm": "voice",
+  "enabled": true,
+  "sslRequired": "external",
+  "accessTokenLifespan": 900,
+  "registrationAllowed": false,
+  "clientScopes": [
+    {
+      "name": "mcp:access",
+      "description": "Access to the Voice MCP Server tools",
+      "protocol": "openid-connect",
+      "attributes": {
+        "include.in.token.scope": "true",
+        "display.on.consent.screen": "true",
+        "consent.screen.text": "Use the Voice MCP Server"
+      },
+      "protocolMappers": [
+        {
+          "name": "voice-mcp-audience",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "consentRequired": false,
+          "config": {
+            "included.custom.audience": "http://127.0.0.1:8000/mcp",
+            "access.token.claim": "true",
+            "id.token.claim": "false",
+            "introspection.token.claim": "true"
+          }
+        }
+      ]
+    }
+  ],
+  "clients": [
+    {
+      "clientId": "voice-mcp-interactive",
+      "name": "Interactive MCP clients (Authorization Code + PKCE)",
+      "enabled": true,
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false,
+      "redirectUris": ["http://127.0.0.1:*", "http://localhost:*"],
+      "webOrigins": ["+"],
+      "attributes": {
+        "pkce.code.challenge.method": "S256",
+        "post.logout.redirect.uris": "+"
+      },
+      "defaultClientScopes": ["mcp:access", "profile", "email"],
+      "optionalClientScopes": []
+    },
+    {
+      "clientId": "voice-mcp-agent",
+      "name": "Example headless agent (Client Credentials)",
+      "enabled": true,
+      "publicClient": false,
+      "clientAuthenticatorType": "client-secret",
+      "standardFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": true,
+      "defaultClientScopes": ["mcp:access"],
+      "optionalClientScopes": []
+    }
+  ],
+  "users": [
+    {
+      "username": "voice-user",
+      "enabled": true,
+      "email": "voice-user@example.invalid",
+      "emailVerified": true,
+      "firstName": "Voice",
+      "lastName": "User",
+      "requiredActions": ["UPDATE_PASSWORD"]
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+description: Large model when installed, word timestamps, conservative VAD and extra checks.
+stt:
+  model: large-v3
+  beam_size: 5
+  word_timestamps: true
+  segment_flags: true
+  vad_threshold: 0.35
+  condition_on_previous_text: false
+tts:
+  loudness_normalization: true

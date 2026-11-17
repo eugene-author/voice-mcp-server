@@ -1,0 +1,1 @@
+"""Amazon ECS compute target."""

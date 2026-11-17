@@ -1,0 +1,218 @@
+[project]
+name = "voice-mcp-server"
+version = "0.1.0"
+description = "Local-inference MCP server for speech recognition, speech synthesis and reference-based voice cloning."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.14,<3.15"
+dependencies = [
+    "mcp[cli]==2.3.0",
+    "pydantic>=2.11,<3",
+    "pydantic-settings>=2.10,<3",
+    "pyyaml>=6.0.2",
+    "sqlalchemy[asyncio]>=2.0.40,<2.2",
+    "asyncpg>=0.30",
+    "alembic>=1.16",
+    "PyJWT[crypto]>=2.10",
+    "httpx>=0.28",
+    "faster-whisper==1.2.1",
+    "av>=14,<16",
+    "soundfile>=0.13",
+    "numpy>=2.0",
+    "huggingface-hub>=0.34",
+    "typer>=0.16",
+]
+
+[project.optional-dependencies]
+tts = ["qwen-tts==0.1.1", "torch>=2.7", "torchaudio>=2.7"]
+denoise = ["onnxruntime>=1.20"]
+cpu = ["torch>=2.7", "torchaudio>=2.7"]
+cuda = ["torch>=2.7", "torchaudio>=2.7"]
+mlx = [
+    "mlx-whisper==0.4.3; sys_platform == 'darwin' and platform_machine == 'arm64'",
+    "mlx-audio==0.6.4; sys_platform == 'darwin' and platform_machine == 'arm64'",
+    "silero-vad==6.2.3; sys_platform == 'darwin' and platform_machine == 'arm64'",
+    "onnxruntime; sys_platform == 'darwin' and platform_machine == 'arm64'",
+]
+s3 = ["boto3>=1.38"]
+aws = ["boto3>=1.38"]
+
+[project.scripts]
+voice-mcp = "app.cli:app"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4",
+    "pytest-asyncio>=1.0",
+    "moto[s3]>=5.1",
+    "ruff>=0.12",
+    "black>=25.1",
+    "mypy>=1.17",
+    "import-linter>=2.3",
+    "types-pyyaml",
+    "boto3-stubs[s3]",
+]
+
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["app"]
+
+[tool.uv]
+default-groups = ["dev"]
+conflicts = [
+    [{ extra = "cpu" }, { extra = "cuda" }],
+    [{ extra = "tts" }, { extra = "mlx" }],
+]
+
+[tool.uv.sources]
+torch = [
+    { index = "pytorch-cpu", extra = "cpu" },
+    { index = "pytorch-cu126", extra = "cuda", marker = "sys_platform == 'linux'" },
+]
+torchaudio = [
+    { index = "pytorch-cpu", extra = "cpu" },
+    { index = "pytorch-cu126", extra = "cuda", marker = "sys_platform == 'linux'" },
+]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[[tool.uv.index]]
+name = "pytorch-cu126"
+url = "https://download.pytorch.org/whl/cu126"
+explicit = true
+
+[tool.black]
+line-length = 120
+target-version = ["py314"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py314"
+extend-exclude = ["app/migrations/versions"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "S", "ASYNC", "RUF", "SIM", "PT", "D100", "D101", "D102", "D103", "D104", "D106", "D200", "D300", "D400", "D415", "D401"]
+ignore = ["S101", "S104", "RUF012"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S105", "S106", "S108", "S603", "D"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "pep257"
+
+[tool.mypy]
+python_version = "3.14"
+strict = true
+packages = ["app"]
+plugins = ["pydantic.mypy"]
+
+[[tool.mypy.overrides]]
+module = [
+    "faster_whisper.*",
+    "ctranslate2.*",
+    "qwen_tts.*",
+    "torch.*",
+    "torchaudio.*",
+    "onnxruntime.*",
+    "mlx.*",
+    "mlx_whisper.*",
+    "mlx_audio.*",
+    "silero_vad.*",
+    "soundfile.*",
+    "boto3.*",
+    "botocore.*",
+    "huggingface_hub.*",
+    "asyncpg.*",
+]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+testpaths = ["tests"]
+markers = [
+    "integration: needs PostgreSQL and FFmpeg",
+    "gpu: needs CUDA",
+    "mlx: needs macOS on Apple Silicon",
+    "s3: needs S3 (moto or real bucket)",
+    "idp: needs a Keycloak container",
+    "models: needs locally installed model weights (slow)",
+]
+addopts = "-m 'not integration and not gpu and not mlx and not idp and not models'"
+
+[tool.importlinter]
+root_package = "app"
+include_external_packages = true
+
+[[tool.importlinter.contracts]]
+name = "domain imports nothing outside itself"
+type = "forbidden"
+source_modules = ["app.domain"]
+forbidden_modules = ["app.ports", "app.services", "app.workers", "app.mcp_server", "app.adapters", "app.db", "app.core", "app.main", "app.cli", "mcp", "sqlalchemy", "boto3", "faster_whisper", "mlx_whisper", "mlx_audio", "torch"]
+allow_indirect_imports = true
+
+[[tool.importlinter.contracts]]
+name = "ports depend only on domain"
+type = "forbidden"
+source_modules = ["app.ports"]
+forbidden_modules = ["app.services", "app.workers", "app.mcp_server", "app.adapters", "app.db", "app.core", "app.main", "app.cli"]
+
+[[tool.importlinter.contracts]]
+name = "core depends only on domain"
+type = "forbidden"
+source_modules = ["app.core"]
+forbidden_modules = ["app.services", "app.workers", "app.mcp_server", "app.adapters", "app.db", "app.main", "app.cli"]
+
+[[tool.importlinter.contracts]]
+name = "services never import adapters, db, mcp_server or workers"
+type = "forbidden"
+source_modules = ["app.services"]
+forbidden_modules = ["app.adapters", "app.db", "app.mcp_server", "app.workers", "app.main", "app.cli"]
+
+[[tool.importlinter.contracts]]
+name = "workers never import adapters, db or mcp_server"
+type = "forbidden"
+source_modules = ["app.workers"]
+forbidden_modules = ["app.adapters", "app.db", "app.mcp_server", "app.main", "app.cli"]
+
+[[tool.importlinter.contracts]]
+name = "mcp_server never imports adapters, db or workers"
+type = "forbidden"
+source_modules = ["app.mcp_server"]
+forbidden_modules = ["app.adapters", "app.db", "app.workers", "app.main", "app.cli"]
+
+[[tool.importlinter.contracts]]
+name = "adapters never import services, workers, mcp_server or db"
+type = "forbidden"
+source_modules = ["app.adapters"]
+forbidden_modules = ["app.services", "app.workers", "app.mcp_server", "app.db", "app.main", "app.cli"]
+
+[[tool.importlinter.contracts]]
+name = "db never imports services, workers, mcp_server or adapters"
+type = "forbidden"
+source_modules = ["app.db"]
+forbidden_modules = ["app.services", "app.workers", "app.mcp_server", "app.adapters", "app.main", "app.cli"]
+
+[[tool.importlinter.contracts]]
+name = "adapter categories are independent"
+type = "independence"
+modules = [
+    "app.adapters.stt",
+    "app.adapters.tts",
+    "app.adapters.denoise",
+    "app.adapters.vad",
+    "app.adapters.media",
+    "app.adapters.storage",
+    "app.adapters.identity",
+    "app.adapters.queue",
+    "app.adapters.models",
+    "app.adapters.host",
+    "app.adapters.compute",
+]
